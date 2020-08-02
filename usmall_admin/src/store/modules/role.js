@@ -1,32 +1,33 @@
-import {requestRoleList} from "../../util/request"
-const state={
-    // 列表数据
-    list:[]
+import { requestRoleList } from '../../util/request'
+
+const state = {
+    list: []
 }
-const mutations ={
-    // 修改list
-    changeList(state,arr){
-        state.list=arr;
+
+const mutations = {
+    changeList(state, arr) {
+        state.list = arr;
     }
 }
 const actions = {
-    requestList(context){
-        requestRoleList().then(res=>{
-            context.commit("changeList",res.data.list)
+    requestList(concext) {
+        requestRoleList().then(res => {
+            concext.commit('changeList', res.data.list)
         })
-    }
-}
-const getters ={
-    list(state){
-        return state.list
+
     }
 }
 
+const getters = {
+    list(state) {
+        return state.list
+    }
+}
 
 export default {
     state,
     mutations,
     actions,
     getters,
-    namespaced:true
+    namespaced: true
 }

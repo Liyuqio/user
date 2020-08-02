@@ -1,33 +1,32 @@
-import { requestMemberList } from "../../util/request"
+import { reqMemberList } from '../../util/request'
 
 const state = {
-    list:[]
+    list: []
 }
 
-const mutations={
-    changeList(state,arr){
+const mutations = {
+    changeList(state, arr) {
         state.list = arr
     }
 }
 
 const actions = {
-    requestList(context){
-        requestMemberList(context).then(res=>{
-            context.commit("changeList",res.data.list)
+    requestList(context) {
+        reqMemberList(context).then(res => {
+            context.commit('changeList', res.data.list)
         })
     }
-}
 
+}
 const getters = {
-    list(state){
+    list(state) {
         return state.list
     }
 }
-
-export default{
+export default {
     state,
     mutations,
     actions,
     getters,
-    namespaced:true
+    namespaced: true
 }

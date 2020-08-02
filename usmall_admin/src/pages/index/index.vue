@@ -43,8 +43,8 @@
       <el-container>
         <el-header>
           <div class="header-con">
-            <span>admin</span>
-            <el-button type="primary">退出</el-button>
+            <span>{{user.username}}</span>
+            <el-button type="primary" @click="exit">退出</el-button>
           </div>
         </el-header>
         <el-main>
@@ -60,35 +60,47 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 export default {
-    components:{},
-    data(){
-        return{};
+  computed: {
+    ...mapGetters({
+      user: "user",
+    }),
+  },
+  methods: {
+    ...mapActions({
+      changeUser: "changeUser",
+    }),
+    //退出
+    exit() {
+      this.changeUser(null);
+      this.$router.push("/login");
     },
-    methods:{},
-    mounted(){},
+  },
+  mounted() {
+  },
 };
 </script>
 
 <style scoped>
-.el-aside{
-    background-color: #20222a;
+.el-aside {
+  background-color: #20222a;
 }
-.el-header{
-    background-color: #b3c0d1;
-    overflow: hidden;
+.el-header {
+  background-color: #b3c0d1;
+  overflow: hidden;
 }
-.page{
-    height: 100vh;
+.page {
+  height: 100vh;
 }
-.header-con{
-    float: right;
+.header-con {
+  float: right;
 }
-.header-con span{
-    line-height: 60px;
-    color: #ffffff;
+.header-con span {
+  line-height: 60px;
+  color: #ffffff;
 }
-.view{
-    padding-top:20px;
+.view {
+  padding-top: 20px;
 }
 </style>

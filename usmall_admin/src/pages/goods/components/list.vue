@@ -69,7 +69,6 @@ methods:{
         requestGoodsDelete({id:id}).then(res=>{
             if(res.data.code==200){
                 successAlert("删除成功");
-
                 this.requestList();
                 this.requestTotal();
             }else{

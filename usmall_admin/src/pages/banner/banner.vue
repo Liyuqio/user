@@ -1,51 +1,42 @@
 <template>
   <div>
-    <el-button type="primary" @click="add">添加</el-button>
-
-    <!-- 添加弹框 -->
+    <el-button type="success" @click="add">添加</el-button>
     <v-add :info="info" ref="add"></v-add>
-
-    <!-- 列表 -->
-    <v-list @edit="edit($event)"></v-list>
+    <v-list @edit="edit"></v-list>
   </div>
 </template>
-
 <script>
+import vList from "./components/list";
 import vAdd from "./components/add";
-import vList from "./components/list"
 export default {
-components:{
-  vAdd,
-  vList,
-},
-data(){
-    return{
-        info:{
-          show:false,
-          title:"添加轮播图",
-          isAdd:true
-        },
-    };
-},
-methods:{
-  // 点击添加按钮
-  add(){
-    this.info.show = true;
-    this.info.title = "添加轮播图"
-    this.info.isAdd = true
+  components: {
+    vList,
+    vAdd,
   },
-  // 点击编辑
-  edit(id){
-    this.info.show = true;
-    this.info.title = "修改轮播图";
-    this.info.isAdd = false
-    this.$refs.add.getDetail(id);
-  }
-},
-mounted(){},
+  data() {
+    return {
+      info: {
+        show: false,
+        title: "轮播图添加",
+        isAdd:true
+      },
+    };
+  },
+  methods: {
+    add() {
+      this.info.show = true
+      this.info.title = "轮播图添加"
+      this.info.isAdd=true
+    },
+    edit(id) {
+      this.info.show = true;
+      this.info.title = "轮播图修改"
+      this.info.isAdd=false
+      this.$refs.add.getDetail(id)
+    },
+  },
+  mounted() {},
 };
 </script>
-
-<style>
-
+<style scoped>
 </style>

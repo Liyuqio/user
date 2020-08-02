@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { requestLogin } from '../../util/request';
+import { reqManageLogin } from '../../util/request';
 import { successAlert,warningAlert } from "../../util/alert"
 import { mapActions } from "vuex"
 export default {
@@ -39,13 +39,12 @@ methods:{
         //     }
         // })
         console.log(this.user)
-        requestLogin(this.user).then(res=>{
-            console.log(res,'1111111111111111111');
+        reqManageLogin(this.user).then(res=>{
             if(res.data.code===200){
                 // 登陆成功
                 successAlert("登录成功")
                 // vuex保存用户信息
-                // this.changeUser(res.data.list)
+                this.changeUser(res.data.list)
                 // 跳转页面
                 this.$router.push("/home")
             }else{
@@ -64,7 +63,7 @@ mounted(){
 .login{
     width: 100vw;
     height: 100vh;
-    background: linaer-gradient(to right,#553444,#303d60);
+    background:linear-gradient(to right,#553444,#303d60);
 }
 .con{
     width: 400px;

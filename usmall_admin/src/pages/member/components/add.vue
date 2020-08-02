@@ -1,130 +1,104 @@
 <template>
   <div>
     <el-dialog :title="info.title" :visible.sync="info.show">
-      <el-form :model="form">
-        <el-form-item label="手机号" label-width="80px">
-         <el-select v-model="form.roleid">
-             <!-- <el-option label="--请选择--" value="disabled"></el-option> -->
-             <el-option v-for="item in roleList" :key="item.id" :label="item.mobilephone"  :value="item.id"></el-option>
-         </el-select>
+      <el-form :model="form" :rules="rules" ref="form">
+        <el-form-item label="手机号" label-width="70px" prop="phone">
+          <el-input v-model="form.phone" autocomplete="off"></el-input>
         </el-form-item>
-
-        <el-form-item label="昵称" label-width="80px">
-            <el-input v-model="form.username"></el-input>
+        <el-form-item label="昵称" label-width="70px" prop="nickname">
+          <el-input v-model="form.nickname" autocomplete="off"></el-input>
         </el-form-item>
-
-      <el-form-item label="密码" label-width="80px">
-            <el-input v-model="form.password" show-password></el-input>
+        <el-form-item label="密码" label-width="70px" prop="password">
+          <el-input v-model="form.password" show-password></el-input>
         </el-form-item>
-
-      <el-form-item label="状态" label-width="80px">
-            <el-switch v-model="form.status" :active-value="1" :inactive-value="2"></el-switch>
+        <el-form-item label="状态" label-width="70px">
+          <el-switch v-model="form.status" :active-value="1" :inactive-value="2"></el-switch>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <!-- <el-button @click="cancel()">取 消</el-button>
-        <el-button type="primary" @click="add" v-if="info.isAdd">添 加</el-button> -->
-        <el-button type="primary" @click="update" >修 改</el-button>
+        <el-button type="primary" @click="update('form')">修改</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
-import { mapGetters,mapActions} from "vuex";
-import {
-  // requestMemberAdd,
-  // requestMemberDetail,
-  // requestMemberUpdate,
-} from "../../../util/request";
-import { successAlert, warningAlert } from "../../../util/alert";
+import {  warningAlert, successAlert } from "../../../util/alert";
+import { reqMemberUpdate, reqMemberDetail } from "../../../util/request";
+import { mapActions, mapGetters } from "vuex";
 export default {
   props: ["info"],
   components: {},
-  computed: {
-    ...mapGetters({
-     roleList:"role/list"
-    }),
-  },
+  computed: {},
   data() {
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        callback();
+      }
+    };
     return {
-      //后端
-      form:{
-          roleid:"",
-          username:"",
-          password:"",
-          status:1,
+      rules: {
+        password: [{ validator: validatePass, trigger: "blur" }],
+        phone: [
+          { required: true, message: "请输入手机号", trigger: "blur" },
+          {
+            min: 11,
+            max: 11,
+            message: "长度在 11 个字符，必须是数字",
+            trigger: "blur",
+          },
+        ],
+        nickname: [
+          { required: true, message: "请输入昵称", trigger: "blur" },
+          { min: 2, max: 7, message: "长度在 2 到 7 个字符", trigger: "blur" },
+        ],
+      },
+      form: {
+        nickname: "",
+        phone: "",
+        password: "",
+        status: 1,
       },
     };
   },
-  mounted(){
-      if(this.roleList.length === 0){
-          this.requestRoleList();
-      }
-  },
   methods: {
     ...mapActions({
-      requestList: "role/requestList",
-      requestMemberList:"member/requestList",
-      requestTotal:"member/requestTotal"
+      requestList: "member/requestList",
     }),
-    //置空
-    empty() {
-      this.form = {
-          roleid:"",
-          username:"",
-          password:"",
-           status: 1,
-      };
-    },
-    //取消
     cancel() {
       this.info.show = false;
-      if(!this.info.isAdd){
-        this.empty()
-      }
     },
-    //点击了添加按钮
-    add() {
-      requestMemberAdd(this.form).then((res) => {
-        if (res.data.code == 200) {
-          successAlert(res.data.msg);
-          //清空
-          this.empty();
-          //弹框消失
-          this.cancel();
-          //重新获取角色列表数据
-          this.requestMemberList();
-          //重新获取总的数量
-          this.requestTotal()  
-        } else {
-          warningAlert(res.data.msg);
-        }
-      });
-    },
-    //获取某一条数据
     getDetail(id) {
-      requestMemberDetail({ uid: id }).then((res) => {
+      reqMemberDetail({ uid: id }).then((res) => {
         this.form = res.data.list;
-        this.form.password= "";
+        this.form.id = id;
+        this.form.password = "";
       });
     },
-    //修改
-    update() {
-      requestMemberUpdate(this.form).then((res) => {
-        if(res.data.code==200){
-          successAlert("修改成功")
-          this.empty()
-          this.cancel()
-          this.requestMemberList()
-        }else{
-          warningAlert(res.data.msg)
+
+    update(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          reqMemberUpdate(this.form).then((res) => {
+            if (res.data.code == 200) {
+             successAlert("修改成功");
+              this.cancel();
+              this.requestList();
+            } else {
+             warningAlert(res.data.msg);
+            }
+          });
+        } else {
+          return false;
         }
       });
     },
+  },
+  mounted() {
+    this.requestList();
   },
 };
 </script>
 <style scoped>
 </style>
-
-

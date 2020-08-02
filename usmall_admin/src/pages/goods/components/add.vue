@@ -262,7 +262,7 @@ export default {
 
     //获取某一条数据
     getDetail(id) {
-      requestSpecDetail({ id: id }).then((res) => {
+      requestGoodsDetail({ id: id }).then((res) => {
         this.form = res.data.list;
         this.form.id = id;
         this.imageUrl = this.$imgPre + this.form.img;
@@ -284,7 +284,7 @@ export default {
           successAlert("修改成功");
           this.empty();
           this.cancel();
-          this.requestList();
+          this.requestGoodsList();
         } else {
           warningAlert(res.data.msg);
         }
@@ -331,6 +331,13 @@ export default {
   width: 178px;
   height: 178px;
   display: block;
+}
+
+.add >>> #desc{
+  width 528px
+}
+.add >>> .w-e-menu{
+  padding 5px 6px
 }
 </style>
 

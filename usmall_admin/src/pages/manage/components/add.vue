@@ -32,7 +32,7 @@
 <script>
 import { mapGetters,mapActions} from "vuex";
 import {
-  requestManageAdd,
+  requestMenuAdd,
   requestManageDetail,
   requestManageUpdate,
 } from "../../../util/request";
@@ -85,7 +85,7 @@ export default {
     },
     //点击了添加按钮
     add() {
-      requestManageAdd(this.form).then((res) => {
+      requestMenuAdd(this.form).then((res) => {
         if (res.data.code == 200) {
           successAlert(res.data.msg);
           //清空
